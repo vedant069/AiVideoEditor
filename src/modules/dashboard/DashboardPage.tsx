@@ -7,6 +7,7 @@ import { YoutubeProcessor } from './components/YoutubeProcessor';
 import { NoiseReducer } from './components/NoiseReducer';
 import { ShortVideo } from './components/ShortVideo';
 import { enhanceAudio } from '@/services/api';
+// import { LampDemo } from '@/components/ui/lamp';
 
 interface Short {
   url: string;
@@ -24,11 +25,11 @@ export function DashboardPage() {
     try {
       setError(null);
       setIsProcessing(true);
-      
+
       // Create URL for original audio
       const originalUrl = URL.createObjectURL(new Blob([await file.arrayBuffer()], { type: file.type }));
       setOriginalAudio(originalUrl);
-      
+
       // Process and enhance audio
       const enhancedUrl = await enhanceAudio(file);
       setEnhancedAudio(enhancedUrl);
@@ -97,7 +98,7 @@ export function DashboardPage() {
                       />
                     </div>
                   )}
-                  
+
                   {enhancedAudio && (
                     <div className="space-y-2">
                       <h2 className="text-sm font-medium text-gray-500">Enhanced Audio</h2>
