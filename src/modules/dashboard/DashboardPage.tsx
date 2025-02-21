@@ -9,6 +9,7 @@ import { NoiseReducer } from './components/NoiseReducer';
 import { ShortVideo } from './components/ShortVideo';
 import { Navbar } from '@/components/ui/Navbar';
 import { enhanceAudio } from '@/services/api';
+import { AuroraBackground } from '@/components/ui/aurora-background';
 import '@/styles/animations.css';
 
 interface Short {
@@ -258,132 +259,118 @@ export function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white relative overflow-hidden">
-      <div 
-        ref={backgroundRef}
-        className="absolute inset-0 pattern-grid bg-gray-900/50 pointer-events-none"
-      />
-      {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 animate-gradient-shift" />
-      
-      {/* Floating particles effect */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-white/10 rounded-full animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${10 + Math.random() * 10}s`
-            }}
-          />
-        ))}
-      </div>
-
-      <Navbar />
-      <AnimatePresence mode="wait">
-        {!selectedFeature ? (
-          <motion.div
-            key="feature-selection"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="max-w-7xl mx-auto px-4 py-12 relative z-10"
-          >
-            <motion.header
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-16"
+    <div className="min-h-screen bg-gray-900 text-white">
+      <AuroraBackground>
+   
+          <Navbar isExpanded={selectedFeature !== null} />
+       
+     
+        <AnimatePresence mode="wait">
+          {!selectedFeature ? (
+            <motion.div
+              key="feature-selection"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="max-w-7xl mx-auto px-4 py-12 relative z-10"
             >
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="inline-flex items-center justify-center gap-3 mb-4 px-8 py-4 bg-gray-800/30 
-                  backdrop-blur-md rounded-full shadow-lg border border-gray-400/20 relative overflow-hidden"
+              <motion.header
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center mb-16"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-pink-500/20 animate-gradient-x" />
-                <Wand2 className="w-6 h-6 text-gray-300 relative z-10" />
-                <h1 className="text-2xl font-semibold text-white relative z-10">
-                  Content Enhancer
-                </h1>
-              </motion.div>
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="text-gray-300 max-w-2xl mx-auto leading-relaxed text-lg"
-              >
-                Transform your content with our AI-powered tools. Choose a feature to begin your journey.
-              </motion.p>
-            </motion.header>
-
-            <motion.div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {features.map((feature) => (
-                <motion.button
-                  key={feature.id}
-                  variants={featureCardVariants}
-                  whileHover="hover"
-                  onClick={() => handleFeatureSelect(feature.id as FeatureType)}
-                  className={`group relative bg-gray-800/30 backdrop-blur-md rounded-2xl p-8 text-left border border-gray-400/20 
-                    transition-all duration-500 hover:border-gray-400/40 overflow-hidden`}
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="inline-flex items-center justify-center gap-3 mb-4 px-8 py-4 bg-gray-800/30 
+                    backdrop-blur-md rounded-full shadow-lg border border-gray-400/20 relative overflow-hidden"
                 >
-                  {/* Animated gradient background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 
-                    group-hover:opacity-100 transition-opacity duration-500`} />
-                  
-                  {/* Glowing border effect */}
-                  <div className={`absolute -inset-px bg-gradient-to-r from-transparent via-white/5 to-transparent 
-                    opacity-0 group-hover:opacity-100 blur-sm transition-all duration-500 ${feature.borderGlow}`} />
-                  
-                  <div className="relative z-10">
-                    <div className={`inline-flex p-3 rounded-lg bg-gray-700/50 mb-4 
-                      transform group-hover:scale-110 transition-transform duration-500`}>
-                      <feature.icon className={`w-6 h-6 ${feature.iconClass}`} />
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-pink-500/20 animate-gradient-x" />
+                  <Wand2 className="w-6 h-6 text-gray-300 relative z-10" />
+                  <h1 className="text-2xl font-semibold text-white relative z-10">
+                    Content Enhancer
+                  </h1>
+                </motion.div>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-gray-300 max-w-2xl mx-auto leading-relaxed text-lg"
+                >
+                  Transform your content with our AI-powered tools. Choose a feature to begin your journey.
+                </motion.p>
+              </motion.header>
+
+              <motion.div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                {features.map((feature) => (
+                  <motion.button
+                    key={feature.id}
+                    variants={featureCardVariants}
+                    whileHover="hover"
+                    onClick={() => handleFeatureSelect(feature.id as FeatureType)}
+                    className={`group relative bg-gray-800/30 backdrop-blur-md rounded-2xl p-8 text-left border border-gray-400/20 
+                      transition-all duration-500 hover:border-gray-400/40 overflow-hidden`}
+                  >
+                    {/* Animated gradient background */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 
+                      group-hover:opacity-100 transition-opacity duration-500`} />
+                    
+                    {/* Glowing border effect */}
+                    <div className={`absolute -inset-px bg-gradient-to-r from-transparent via-white/5 to-transparent 
+                      opacity-0 group-hover:opacity-100 blur-sm transition-all duration-500 ${feature.borderGlow}`} />
+                    
+                    <div className="relative z-10">
+                      <div className={`inline-flex p-3 rounded-lg bg-gray-700/50 mb-4 
+                        transform group-hover:scale-110 transition-transform duration-500`}>
+                        <feature.icon className={`w-6 h-6 ${feature.iconClass}`} />
+                      </div>
+                      <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
+                      <p className="text-gray-300 text-sm leading-relaxed">{feature.description}</p>
                     </div>
-                    <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
-                    <p className="text-gray-300 text-sm leading-relaxed">{feature.description}</p>
-                  </div>
-                </motion.button>
-              ))}
+                  </motion.button>
+                ))}
+              </motion.div>
             </motion.div>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="feature-content"
-            variants={pageTransitionVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            className="max-w-7xl mx-auto px-4 py-12 relative z-10"
-          >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleBack}
-              className="mb-8 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gray-800/30 
-                backdrop-blur-md border border-gray-400/20 hover:border-gray-400/40 
-                transition-all duration-300 text-gray-300 hover:text-white"
+          ) : (
+            <motion.div
+              key="feature-content"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ 
+                duration: 0.8,
+                ease: [0.4, 0, 0.2, 1],
+                delay: 0.2 // Slight delay to let navbar animation start first
+              }}
+              className="max-w-7xl mx-auto px-4 pt-24 pb-12 relative z-10" // Added pt-24 for navbar space
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleBack}
+                className="mb-8 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gray-800/30 
+                  backdrop-blur-md border border-gray-400/20 hover:border-gray-400/40 
+                  transition-all duration-300 text-gray-300 hover:text-white"
               >
-                <path
-                  fillRule="evenodd"
-                  d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Return to Dashboard
-            </motion.button>
-            {renderFeatureContent()}
-          </motion.div>
-        )}
-      </AnimatePresence>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Return to Dashboard
+              </motion.button>
+              {renderFeatureContent()}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </AuroraBackground>
     </div>
   );
 }

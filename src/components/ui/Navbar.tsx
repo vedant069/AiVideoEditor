@@ -2,7 +2,11 @@ import { useState } from 'react';
 import { Menu, X, LogOut, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export function Navbar() {
+interface NavbarProps {
+  isExpanded?: boolean;
+}
+
+export function Navbar({ isExpanded = false }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(true); // Replace with actual auth state
 
@@ -20,26 +24,64 @@ export function Navbar() {
   };
 
   return (
-    <nav className="bg-gray-900/50 backdrop-blur-sm border-b border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <motion.nav
+      initial={{
+        backgroundColor: "rgba(17, 24, 39, 0.5)",
+        position: "relative",
+        width: "50%",
+        marginBottom: "2rem",
+        borderRadius: "1rem",
+      }}
+      animate={{
+        backgroundColor: isExpanded ? "rgba(17, 24, 39, 0.9)" : "rgba(17, 24, 39, 0.5)",
+        position: isExpanded ? "fixed" : "relative",
+        top: isExpanded ? 0 : "2rem",
+        width: isExpanded ? "100%" : "50%",
+
+        marginBottom: "2rem",
+        borderRadius: isExpanded ? 0 : "1rem",
+        zIndex: 50,
+      }}
+      transition={{ 
+        duration: 0.8,
+        ease: [0.4, 0, 0.2, 1],
+        backgroundColor: { duration: 0.3 }
+      }}
+      className="backdrop-blur-sm border-b border-gray-800"
+    >
+      <motion.div
+        initial={{
+          maxWidth: "60rem",
+          padding: "0 1rem",
+        }}
+        animate={{
+          maxWidth: isExpanded ? "100%" : "60rem",
+          padding: isExpanded ? "0 2rem" : "0 1rem",
+        }}
+        transition={{ 
+          duration: 0.8,
+          ease: [0.4, 0, 0.2, 1]
+        }}
+        className="mx-auto sm:px-6 lg:px-8"
+      >
+        <div className="flex items-center justify-between h-14">
           {/* Logo */}
           <div className="flex-shrink-0">
             <a href="/" className="flex items-center">
-              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
+              <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
                 VideoAI
               </span>
             </a>
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             {menuItems.map((item) => (
               <motion.a
                 key={item.name}
                 href={item.href}
                 whileHover={{ scale: 1.05 }}
-                className="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium transition-colors duration-200"
+                className="text-gray-300 hover:text-white px-2 py-1 text-sm font-medium transition-colors duration-200"
               >
                 {item.name}
               </motion.a>
@@ -78,7 +120,7 @@ export function Navbar() {
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Mobile menu */}
       <AnimatePresence>
@@ -121,6 +163,6 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </motion.nav>
   );
 }

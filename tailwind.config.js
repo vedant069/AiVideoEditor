@@ -7,12 +7,14 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: "class", // Add this line
   theme: {
+
     extend: {
       animation: {
         'spin-fast': 'spin 0.5s linear infinite',
         'fadeIn': 'fadeIn 0.5s ease-in',
         'slideUp': 'slideUp 0.5s ease-out',
         'shake': 'shake 0.5s ease-in-out',
+        'aurora': 'aurora 60s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -28,12 +30,6 @@ export default {
           '25%': { transform: 'translateX(-4px)' },
           '75%': { transform: 'translateX(4px)' },
         },
-      },
-      boxShadow: {
-        'neon': '0 0 5px theme(colors.blue.400), 0 0 20px theme(colors.blue.500)',
-        aurora: "aurora 60s linear infinite",
-      },
-      keyframes: {
         aurora: {
           from: {
             backgroundPosition: "50% 50%, 50% 50%",
@@ -42,6 +38,9 @@ export default {
             backgroundPosition: "350% 50%, 350% 50%",
           },
         },
+      },
+      boxShadow: {
+        'neon': '0 0 5px theme(colors.blue.400), 0 0 20px theme(colors.blue.500)',
       },
     },
   },

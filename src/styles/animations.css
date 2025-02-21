@@ -35,6 +35,15 @@
   50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
 }
 
+@keyframes aurora {
+  from {
+    background-position: 50% 50%, 50% 50%;
+  }
+  to {
+    background-position: 350% 50%, 350% 50%;
+  }
+}
+
 .animate-gradient-shift {
   animation: gradient-shift 15s ease infinite;
   background-size: 200% 200%;
@@ -47,6 +56,10 @@
 
 .animate-float {
   animation: float 10s ease infinite;
+}
+
+.animate-aurora {
+  animation: aurora 60s linear infinite;
 }
 
 .info-tooltip {
