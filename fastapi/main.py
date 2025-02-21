@@ -28,6 +28,8 @@ app.mount("/shorts", StaticFiles(directory="uploads/shorts"), name="shorts")
 
 @app.post("/enhance-audio")
 async def enhance_audio(file: UploadFile = File(...)):
+    file_path = None
+    enhanced_file_path = None
     try:
         # Validate file type
         if not file.content_type.startswith('audio/'):
@@ -44,22 +46,24 @@ async def enhance_audio(file: UploadFile = File(...)):
         enhanced_file_path = await audio_service.process_audio(file_path)
         
         # Return the enhanced audio file
-        return FileResponse(
+        response = FileResponse(
             enhanced_file_path,
             media_type="audio/wav",
             filename="enhanced_audio.wav"
         )
+        
+        # Clean up the input file immediately
+        if file_path and os.path.exists(file_path):
+            os.remove(file_path)
+            
+        return response
     except Exception as e:
+        # Clean up any files if there's an error
+        if file_path and os.path.exists(file_path):
+            os.remove(file_path)
+        if enhanced_file_path and os.path.exists(enhanced_file_path):
+            os.remove(enhanced_file_path)
         raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        # Cleanup uploaded files
-        try:
-            if os.path.exists(file_path):
-                os.remove(file_path)
-            if os.path.exists(enhanced_file_path):
-                os.remove(enhanced_file_path)
-        except:
-            pass
 
 @app.post("/reduce-noise")
 async def reduce_noise(file: UploadFile = File(...)):

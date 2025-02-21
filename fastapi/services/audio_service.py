@@ -107,6 +107,7 @@ class AudioService:
         prompt = (
             "Optimize the following transcription JSON by removing duplicate phrases. "
             "If there are repeated segments, remove the duplicates and keep only the last occurrence, "
+            "Make sure to not incluse any duplicates words and phrases"
             "preserving the start and end times of the retained words. "
             "Return the result in the exact JSON format as shown below:\n\n"
             "{\n"
