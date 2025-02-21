@@ -12,7 +12,7 @@ from pathlib import Path
 class AudioService:
     def __init__(self):
         self.deepgram_api_key = 'a8b75fa07ad77e26a7866d995ed329553927767b'
-        self.gemini_api_key = 'AIzaSyAOK9vRTSRQzd22B2gmbiuIePbZTDyaGYs'
+        self.gemini_api_key = 'AIzaSyAi6inimWToyS6KWMwPrU02gwKn_u5_Ca0'
         self.setup_clients()
 
     def setup_clients(self):

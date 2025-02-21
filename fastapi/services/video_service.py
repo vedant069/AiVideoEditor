@@ -22,7 +22,7 @@ from moviepy.video.tools.subtitles import SubtitlesClip
 class VideoService:
     def __init__(self):
         self.deepgram_api_key = 'a8b75fa07ad77e26a7866d995ed329553927767b'
-        self.gemini_api_key = 'AIzaSyAOK9vRTSRQzd22B2gmbiuIePbZTDyaGYs'
+        self.gemini_api_key = 'AIzaSyAi6inimWToyS6KWMwPrU02gwKn_u5_Ca0'
         self.output_dir = "uploads/shorts"
         os.makedirs(self.output_dir, exist_ok=True)
 

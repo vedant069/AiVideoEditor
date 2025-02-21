@@ -1,0 +1,55 @@
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes gradient-x {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-20px) translateX(10px); }
+}
+
+.animate-gradient-shift {
+  animation: gradient-shift 15s ease infinite;
+  background-size: 200% 200%;
+}
+
+.animate-gradient-x {
+  animation: gradient-x 3s linear infinite;
+  background-size: 200% 100%;
+}
+
+.animate-float {
+  animation: float 10s ease infinite;
+}
+
+.pattern-grid {
+  background-image: 
+    linear-gradient(rgba(66, 153, 225, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(66, 153, 225, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center center;
+}
+
+.pattern-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(66, 153, 225, 0.15) 0%,
+    transparent 35%
+  );
+  transition: opacity 0.3s ease;
+  opacity: var(--pattern-opacity, 0);
+  pointer-events: none;
+}
+
+.pattern-grid.active::before {
+  opacity: 1;
+}
