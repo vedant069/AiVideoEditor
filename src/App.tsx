@@ -1,14 +1,17 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { LampDemo } from './components/ui/lamp';
+// import { LampDemo } from './components/ui/lamp';
 import { DashboardPage } from './modules/dashboard/DashboardPage';
+
+// import { FeaturesSectionDemo } from './components/ui/feature';
+import { HomePage } from './modules/dashboard/HomePage';
 
 function App() {
   return (
 
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-black-50">
         <Routes>
-          <Route path="/" element={<LampDemo />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/feature" element={<DashboardPage />} />
         </Routes>
       </div>
@@ -17,3 +20,4 @@ function App() {
 }
 
 export default App;
+

@@ -11,8 +11,10 @@
     "backend:dev": "cd fastapi && uvicorn main:app --reload"
   },
   "dependencies": {
+    "@tabler/icons-react": "^3.30.0",
     "axios": "^1.6.7",
     "clsx": "^2.1.1",
+    "cobe": "^0.6.3",
     "lucide-react": "^0.344.0",
     "motion": "^12.4.7",
     "react": "^18.3.1",

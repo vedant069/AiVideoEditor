@@ -6,6 +6,16 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+venv/
+.venv/
+
+fastapi/venv/
+fastapi/.venv/
+fastapi/__pycache__/
+fastapi/**/__pycache__/
+fastapi/*.py[cod]
+*.py[cod]
+__pycache__/
 
 node_modules
 dist
