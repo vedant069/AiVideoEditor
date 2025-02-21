@@ -14,6 +14,27 @@
   50% { transform: translateY(-20px) translateX(10px); }
 }
 
+@keyframes pathwayDot {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pathwayLine {
+  0% { transform: scaleY(0); }
+  100% { transform: scaleY(1); }
+}
+
+@keyframes textReveal {
+  0% { opacity: 0; transform: translateX(-10px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+}
+
 .animate-gradient-shift {
   animation: gradient-shift 15s ease infinite;
   background-size: 200% 200%;
@@ -28,26 +49,102 @@
   animation: float 10s ease infinite;
 }
 
+.info-tooltip {
+  @apply absolute right-4 top-4 p-2 rounded-full bg-gray-700/50 
+    hover:bg-blue-500/20 transition-all cursor-pointer z-30;
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+.info-overlay {
+  @apply fixed inset-0 bg-gray-900/80 backdrop-blur-sm;
+  z-index: 99999;
+}
+
+.info-pathway {
+  @apply fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 
+    bg-gray-800/95 backdrop-blur-xl rounded-2xl p-8 
+    border border-blue-500/20 shadow-2xl w-[500px]
+    max-h-[90vh] overflow-y-auto;
+  z-index: 999999;
+  box-shadow: 
+    0 0 50px rgba(59, 130, 246, 0.2),
+    0 0 100px rgba(59, 130, 246, 0.1),
+    inset 0 0 20px rgba(59, 130, 246, 0.05);
+}
+
+.info-pathway::-webkit-scrollbar {
+  width: 8px;
+}
+
+.info-pathway::-webkit-scrollbar-track {
+  @apply bg-gray-800/50 rounded-full;
+}
+
+.info-pathway::-webkit-scrollbar-thumb {
+  @apply bg-blue-500/30 rounded-full hover:bg-blue-500/50 transition-colors;
+}
+
+.info-pathway::before {
+  content: '';
+  @apply absolute inset-0 rounded-2xl;
+  background: 
+    linear-gradient(45deg, rgba(59, 130, 246, 0.1), transparent),
+    radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.1), transparent 70%);
+  z-index: -1;
+}
+
+.pathway-dot {
+  @apply w-3 h-3 rounded-full bg-blue-500;
+  animation: pathwayDot 0.5s ease forwards;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.pathway-line {
+  @apply w-px bg-gradient-to-b from-blue-500/50 to-blue-500/10;
+  transform-origin: top;
+  animation: pathwayLine 0.5s ease forwards;
+}
+
+.pathway-text {
+  @apply text-sm text-gray-200 leading-relaxed;
+  animation: textReveal 0.5s ease forwards;
+}
+
+.pathway-step {
+  @apply flex items-start gap-6 mb-6 last:mb-0 relative 
+    hover:bg-blue-500/5 rounded-lg transition-colors p-4 -mx-4;
+}
+
+.pathway-step::before {
+  content: '';
+  @apply absolute -inset-4 rounded-lg;
+  background: linear-gradient(to right, rgba(59, 130, 246, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.pathway-step:hover::before {
+  opacity: 1;
+}
+
+.pathway-content {
+  @apply flex-1;
+}
+
+.pathway-title {
+  @apply text-blue-400 font-semibold mb-1 text-lg;
+}
+
+.pathway-description {
+  @apply text-gray-400 text-sm leading-relaxed;
+}
+
 .pattern-grid {
   background-image: 
     linear-gradient(rgba(66, 153, 225, 0.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(66, 153, 225, 0.1) 1px, transparent 1px);
   background-size: 40px 40px;
   background-position: center center;
-}
-
-.pattern-grid::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(
-    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(66, 153, 225, 0.15) 0%,
-    transparent 35%
-  );
-  transition: opacity 0.3s ease;
-  opacity: var(--pattern-opacity, 0);
-  pointer-events: none;
 }
 
 .pattern-grid.active::before {
