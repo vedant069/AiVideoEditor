@@ -15,15 +15,18 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.5",
     "@mui/material": "^6.4.5",
+    "@tabler/icons-react": "^3.30.0",
     "axios": "^1.6.7",
     "clsx": "^2.1.1",
+    "cobe": "^0.6.3",
     "lucide-react": "^0.344.0",
     "motion": "^12.4.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.3",
     "react-router-dom": "^7.2.0",
-    "tailwind-merge": "^2.6.0"
+    "tailwind-merge": "^2.6.0",
+    "vite-react-typescript-starter": "file:"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

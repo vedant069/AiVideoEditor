@@ -3,37 +3,44 @@ import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import { FeaturesSectionDemo } from "./glowing-effect";
 
 export function LampDemo() {
   return (
-    <LampContainer>
-      <motion.h1
-        initial={{ opacity: 0.5, y: 100 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{
-          delay: 0.3,
-          duration: 0.8,
-          ease: "easeInOut",
-        }}
-        className="mt-8 bg-gradient-to-br from-slate-300 to-slate-500 py-4 bg-clip-text text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl"
-      >
-        Edit videos <br /> the right way
-      </motion.h1>
-      <div className="flex gap-4 mt-8">
-        <Link
-          to="/feature"
-          className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-full transition-colors"
+    <div className="flex flex-col items-center">
+      <LampContainer>
+        <motion.h1
+          initial={{ opacity: 0.5, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 0.3,
+            duration: 0.8,
+            ease: "easeInOut",
+          }}
+          className="mt-8 bg-gradient-to-br from-slate-300 to-slate-500 py-4 bg-clip-text text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl"
         >
-          Get Started
-        </Link>
-        <Link
-          to="/feature"
-          className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-full transition-colors"
-        >
-          Pricing
-        </Link>
+          Edit videos <br /> the right way
+        </motion.h1>
+        <div className="flex gap-4 mt-8">
+          <Link
+            to="/feature"
+            className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-full transition-colors"
+          >
+            Get Started
+          </Link>
+          <Link
+            to="/feature"
+            className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-full transition-colors"
+          >
+            Pricing
+          </Link>
+        </div>
+      </LampContainer>
+      <div className="mt-16">
+        <FeaturesSectionDemo />
       </div>
-    </LampContainer>
+    </div>
+
   );
 }
 
