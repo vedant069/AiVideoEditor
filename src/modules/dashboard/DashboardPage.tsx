@@ -6,6 +6,8 @@ import { ProcessingStatus } from './components/ProcessingStatus';
 import { YoutubeProcessor } from './components/YoutubeProcessor';
 import { NoiseReducer } from './components/NoiseReducer';
 import { ShortVideo } from './components/ShortVideo';
+import { VideoHighlighter } from './components/VideoHighlighter';
+import VideoEditor from './components/VideoEditor';
 import { enhanceAudio } from '@/services/api';
 
 interface Short {
@@ -112,7 +114,10 @@ export function DashboardPage() {
                 </div>
               )}
 
-              <NoiseReducer />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <NoiseReducer />
+                <VideoHighlighter />
+              </div>
             </div>
 
             <div className="space-y-6">
@@ -132,6 +137,16 @@ export function DashboardPage() {
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+          <div className="grid gap-8">
+            <div className="grid md:grid-cols-1 gap-6">
+              <div className="space-y-6">
+                <div className="bg-white rounded-xl shadow-sm p-6">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Video Editor</h2>
+                  <VideoEditor />
+                </div>
+              </div>
             </div>
           </div>
         </div>

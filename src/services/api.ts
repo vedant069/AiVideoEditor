@@ -51,3 +51,36 @@ export async function reduceNoise(file: File): Promise<string> {
     throw error;
   }
 }
+
+export async function createHighlights(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const response = await api.post('/create-highlights', formData, {
+      responseType: 'blob',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    if (!response.data) {
+      throw new Error('No data received from server');
+    }
+
+    const videoBlob = new Blob([response.data], { type: 'video/mp4' });
+    return URL.createObjectURL(videoBlob);
+  } catch (error) {
+    console.error('Error creating highlights:', error);
+    throw error;
+  }
+}
+
+export const editVideo = (formData: FormData) => {
+  return api.post('/edit-video', formData, {
+    responseType: 'blob',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};

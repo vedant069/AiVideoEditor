@@ -171,6 +171,7 @@ class VideoService:
                 model='gemini-2.0-flash',
                 contents=prompt
             )
+            print(response.text)
             cleaned_text = re.sub(r'^```json\n|```$', '', response.text.strip())
             return json.loads(cleaned_text)
         except Exception as e:
@@ -179,7 +180,7 @@ class VideoService:
 
     def create_shorts_prompt(self, transcription):
         return f"""You are an expert video content editor. You are given a JSON object representing the full transcription of a 5-minute video segment.
-The JSON has two keys:
+    The JSON has two keys:
   "transcript": a string containing the full transcript,
   "words": a list of word objects, where each word object has:
       "word": the transcribed word,

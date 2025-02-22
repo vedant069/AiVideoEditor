@@ -11,6 +11,10 @@
     "backend:dev": "cd fastapi && uvicorn main:app --reload"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.5",
+    "@mui/material": "^6.4.5",
     "axios": "^1.6.7",
     "clsx": "^2.1.0",
     "lucide-react": "^0.344.0",
