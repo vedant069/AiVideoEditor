@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Wand2, Music, Youtube, Volume2 } from 'lucide-react';
+import { Wand2, Music, Youtube, Volume2, Video, Edit3 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AudioUploader } from './components/AudioUploader';
 import { AudioPlayer } from './components/AudioPlayer';
@@ -8,7 +8,7 @@ import { YoutubeProcessor } from './components/YoutubeProcessor';
 import { NoiseReducer } from './components/NoiseReducer';
 import { ShortVideo } from './components/ShortVideo';
 import { VideoHighlighter } from './components/VideoHighlighter';
-import VideoEditor from './components/VideoEditor';
+import { VideoEditor } from './components/VideoEditor';
 import { Navbar } from '@/components/ui/Navbar';
 import { enhanceAudio } from '@/services/api';
 import { AuroraBackground } from '@/components/ui/aurora-background';
@@ -19,7 +19,7 @@ interface Short {
   script: string;
 }
 
-type FeatureType = 'audio' | 'youtube' | 'noise' | null;
+type FeatureType = 'audio' | 'youtube' | 'noise' | 'highlight' | 'edit' | null;
 
 const features = [
   {
@@ -48,6 +48,24 @@ const features = [
     gradient: 'from-blue-600/20 to-cyan-600/20',
     borderGlow: 'group-hover:shadow-blue-500/50',
     iconClass: 'text-blue-400',
+  },
+  {
+    id: 'highlight',
+    title: 'Video Highlighter',
+    description: 'Automatically detect and highlight key moments in your videos',
+    icon: Video,
+    gradient: 'from-green-600/20 to-emerald-600/20',
+    borderGlow: 'group-hover:shadow-green-500/50',
+    iconClass: 'text-green-400',
+  },
+  {
+    id: 'edit',
+    title: 'Video Editor',
+    description: 'Professional video editing tools with AI assistance',
+    icon: Edit3,
+    gradient: 'from-yellow-600/20 to-amber-600/20',
+    borderGlow: 'group-hover:shadow-yellow-500/50',
+    iconClass: 'text-yellow-400',
   },
 ];
 
@@ -134,41 +152,27 @@ export function DashboardPage() {
   const [shorts, setShorts] = useState<Short[]>([]);
   const [selectedFeature, setSelectedFeature] = useState<FeatureType>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (backgroundRef.current) {
-        const rect = backgroundRef.current.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        
-        backgroundRef.current.style.setProperty('--mouse-x', `${x}%`);
-        backgroundRef.current.style.setProperty('--mouse-y', `${y}%`);
-        backgroundRef.current.style.setProperty('--pattern-opacity', '1');
-      }
-    };
-
-    const handleMouseLeave = () => {
-      if (backgroundRef.current) {
-        backgroundRef.current.style.setProperty('--pattern-opacity', '0');
-      }
+      setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseleave', handleMouseLeave);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseleave', handleMouseLeave);
-    };
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  const handleVideoSelect = (file: File) => {
+    setSelectedVideo(file);
+  };
 
   const handleFileSelect = async (file: File) => {
     try {
       setError(null);
       setIsProcessing(true);
-      const originalUrl = URL.createObjectURL(new Blob([await file.arrayBuffer()], { type: file.type }));
+      const originalUrl = URL.createObjectURL(file);
       setOriginalAudio(originalUrl);
       const enhancedUrl = await enhanceAudio(file);
       setEnhancedAudio(enhancedUrl);
@@ -186,10 +190,13 @@ export function DashboardPage() {
 
   const handleFeatureSelect = (feature: FeatureType) => {
     setSelectedFeature(feature);
+    setError(null);
   };
 
   const handleBack = () => {
     setSelectedFeature(null);
+    setSelectedVideo(null);
+    setError(null);
   };
 
   const renderFeatureContent = () => {
@@ -203,7 +210,7 @@ export function DashboardPage() {
         exit={{ opacity: 0, y: -20 }}
         className="space-y-8"
       >
-        <div className={`bg-gray-800/30 backdrop-blur-md rounded-2xl shadow-xl border border-gray-400/20 p-8 relative overflow-hidden group`}>
+        <div className="bg-gray-800/30 backdrop-blur-md rounded-2xl shadow-xl border border-gray-400/20 p-8 relative overflow-hidden group">
           <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
           <div className={`absolute -inset-px bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 blur-sm transition-all duration-500 ${feature.borderGlow}`} />
           <div className="relative z-10">
@@ -211,56 +218,6 @@ export function DashboardPage() {
               <>
                 <h2 className="text-2xl font-semibold text-white mb-6">Audio Enhancement</h2>
                 <AudioUploader onFileSelect={handleFileSelect} isProcessing={isProcessing} />
-              </div>
-
-              {error && (
-                <div className="bg-red-50 border border-red-100 text-red-700 px-4 py-3 rounded-lg">
-                  <p className="text-sm font-medium">{error}</p>
-                </div>
-              )}
-
-              <ProcessingStatus isVisible={isProcessing} />
-
-              {(originalAudio || enhancedAudio) && (
-                <div className="grid gap-6">
-                  {originalAudio && (
-                    <div className="space-y-2">
-                      <h2 className="text-sm font-medium text-gray-500">Original Audio</h2>
-                      <AudioPlayer
-                        audioUrl={originalAudio}
-                        title="Original Recording"
-                        className="h-full"
-                      />
-                    </div>
-                  )}
-
-                  {enhancedAudio && (
-                    <div className="space-y-2">
-                      <h2 className="text-sm font-medium text-gray-500">Enhanced Audio</h2>
-                      <AudioPlayer
-                        audioUrl={enhancedAudio}
-                        title="Enhanced Recording"
-                        onDownload={handleDownload}
-                        className="h-full"
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
-
-            //   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            //     <NoiseReducer />
-            //     <VideoHighlighter />
-            //   </div>
-            // </div>
-
-            <div className="space-y-6">
-              <YoutubeProcessor onShortsGenerated={handleShortsGenerated} />
-
-              {shorts.length > 0 && (
-                <div className="grid gap-6">
-                  <h2 className="text-lg font-semibold text-gray-900">Generated Shorts</h2>
-                  <div className="grid sm:grid-cols-2 gap-6">
                 {error && (
                   <div className="mt-4 bg-red-900/20 border border-red-500/30 text-red-400 px-6 py-4 rounded-xl">
                     <p className="text-sm font-medium">{error}</p>
@@ -304,16 +261,24 @@ export function DashboardPage() {
                 <NoiseReducer />
               </>
             )}
-          </div>
-          <div className="grid gap-8">
-            <div className="grid md:grid-cols-1 gap-6">
-              <div className="space-y-6">
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Video Editor</h2>
-                  <VideoEditor />
-                </div>
-              </div>
-            </div>
+            {selectedFeature === 'highlight' && (
+              <>
+                <h2 className="text-2xl font-semibold text-white mb-6">Video Highlighter</h2>
+                <VideoHighlighter 
+                  selectedVideo={selectedVideo}
+                  onVideoSelect={setSelectedVideo}
+                />
+              </>
+            )}
+            {selectedFeature === 'edit' && (
+              <>
+                <h2 className="text-2xl font-semibold text-white mb-6">Video Editor</h2>
+                <VideoEditor 
+                  selectedVideo={selectedVideo}
+                  onVideoSelect={setSelectedVideo}
+                />
+              </>
+            )}
           </div>
         </div>
       </motion.div>
@@ -323,10 +288,7 @@ export function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <AuroraBackground>
-   
-          <Navbar isExpanded={selectedFeature !== null} />
-       
-     
+        <Navbar isExpanded={selectedFeature !== null} />
         <AnimatePresence mode="wait">
           {!selectedFeature ? (
             <motion.div
@@ -340,16 +302,16 @@ export function DashboardPage() {
               <motion.header
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-center mb-16"
+                className="text-center mb-8"
               >
                 <motion.div
                   whileHover={{ scale: 1.05 }}
-                  className="inline-flex items-center justify-center gap-3 mb-4 px-8 py-4 bg-gray-800/30 
+                  className="inline-flex items-center justify-center gap-3 mb-3 px-6 py-3 bg-gray-800/30 
                     backdrop-blur-md rounded-full shadow-lg border border-gray-400/20 relative overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-pink-500/20 animate-gradient-x" />
-                  <Wand2 className="w-6 h-6 text-gray-300 relative z-10" />
-                  <h1 className="text-2xl font-semibold text-white relative z-10">
+                  <Wand2 className="w-5 h-5 text-gray-300 relative z-10" />
+                  <h1 className="text-xl font-semibold text-white relative z-10">
                     Content Enhancer
                   </h1>
                 </motion.div>
@@ -357,21 +319,22 @@ export function DashboardPage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="text-gray-300 max-w-2xl mx-auto leading-relaxed text-lg"
+                  className="text-gray-300 max-w-2xl mx-auto leading-relaxed text-sm"
                 >
-                  Transform your content with our AI-powered tools. Choose a feature to begin your journey.
+                  Transform your content with our AI-powered tools
                 </motion.p>
               </motion.header>
 
-              <motion.div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              <motion.div className="flex flex-wrap justify-center items-center gap-3 max-w-4xl mx-auto px-4">
                 {features.map((feature) => (
                   <motion.button
                     key={feature.id}
                     variants={featureCardVariants}
                     whileHover="hover"
                     onClick={() => handleFeatureSelect(feature.id as FeatureType)}
-                    className={`group relative bg-gray-800/30 backdrop-blur-md rounded-2xl p-8 text-left border border-gray-400/20 
-                      transition-all duration-500 hover:border-gray-400/40 overflow-hidden`}
+                    className={`group relative bg-gray-800/30 backdrop-blur-md rounded-lg p-3 text-left border border-gray-400/20 
+                      transition-all duration-500 hover:border-gray-400/40 overflow-hidden flex items-center gap-3
+                      w-[220px] h-[64px]`}
                   >
                     {/* Animated gradient background */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 
@@ -381,13 +344,15 @@ export function DashboardPage() {
                     <div className={`absolute -inset-px bg-gradient-to-r from-transparent via-white/5 to-transparent 
                       opacity-0 group-hover:opacity-100 blur-sm transition-all duration-500 ${feature.borderGlow}`} />
                     
-                    <div className="relative z-10">
-                      <div className={`inline-flex p-3 rounded-lg bg-gray-700/50 mb-4 
+                    <div className="relative z-10 flex items-center gap-3 w-full">
+                      <div className={`flex-shrink-0 p-1.5 rounded-lg bg-gray-700/50 
                         transform group-hover:scale-110 transition-transform duration-500`}>
-                        <feature.icon className={`w-6 h-6 ${feature.iconClass}`} />
+                        <feature.icon className={`w-4 h-4 ${feature.iconClass}`} />
                       </div>
-                      <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
-                      <p className="text-gray-300 text-sm leading-relaxed">{feature.description}</p>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-sm font-medium text-white truncate">{feature.title}</h3>
+                        <p className="text-gray-300 text-xs leading-tight truncate">{feature.description}</p>
+                      </div>
                     </div>
                   </motion.button>
                 ))}
@@ -402,9 +367,9 @@ export function DashboardPage() {
               transition={{ 
                 duration: 0.8,
                 ease: [0.4, 0, 0.2, 1],
-                delay: 0.2 // Slight delay to let navbar animation start first
+                delay: 0.2
               }}
-              className="max-w-7xl mx-auto px-4 pt-24 pb-12 relative z-10" // Added pt-24 for navbar space
+              className="max-w-7xl mx-auto px-4 pt-24 pb-12 relative z-10"
             >
               <motion.button
                 whileHover={{ scale: 1.05 }}
